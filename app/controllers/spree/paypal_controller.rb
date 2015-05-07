@@ -8,8 +8,21 @@ module Spree
 
       tax_adjustments = order.adjustments.tax.additional
       shipping_adjustments = order.adjustments.shipping
+      promotion_line_item_adjustments = order.line_item_adjustments.promotion
 
       order.adjustments.eligible.each do |adjustment|
+        next if (tax_adjustments + shipping_adjustments).include?(adjustment)
+        items << {
+          :Name => adjustment.label,
+          :Quantity => 1,
+          :Amount => {
+            :currencyID => order.currency,
+            :value => adjustment.amount
+          }
+        }
+      end
+
+      promotion_line_item_adjustments.each do |adjustment|
         next if (tax_adjustments + shipping_adjustments).include?(adjustment)
         items << {
           :Name => adjustment.label,
