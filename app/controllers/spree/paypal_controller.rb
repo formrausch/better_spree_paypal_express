@@ -46,7 +46,7 @@ module Spree
       begin
         pp_response = provider.set_express_checkout(pp_request)
         if pp_response.success?
-          redirect_to provider.express_checkout_url(pp_response, :useraction => 'commit')
+          redirect_to provider.express_checkout_url(pp_response)
         else
           flash[:error] = Spree.t('flash.generic_error', :scope => 'paypal', :reasons => pp_response.errors.map(&:long_message).join(" "))
           redirect_to checkout_state_path(:payment)
@@ -67,7 +67,7 @@ module Spree
         :amount => order.total,
         :payment_method => payment_method
       })
-      order.next
+      order.next if order.state == "payment"
       if order.complete?
         flash.notice = Spree.t(:order_processed_successfully)
         flash[:commerce_tracking] = "nothing special"
