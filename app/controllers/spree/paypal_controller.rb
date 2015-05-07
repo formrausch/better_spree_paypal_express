@@ -1,5 +1,6 @@
 module Spree
   class PaypalController < StoreController
+    include ActionView::Helpers::SanitizeHelper
     ssl_allowed
 
     def express
@@ -25,7 +26,10 @@ module Spree
       promotion_line_item_adjustments.each do |adjustment|
         next if (tax_adjustments + shipping_adjustments).include?(adjustment)
         items << {
-          :Name => adjustment.label,
+          # FIXME: dont use translated labels 
+          # this might result in missing translations being send
+          # to Paypal
+          :Name => strip_tags(adjustment.label),
           :Quantity => 1,
           :Amount => {
             :currencyID => order.currency,
