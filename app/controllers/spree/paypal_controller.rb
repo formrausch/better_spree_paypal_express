@@ -71,7 +71,7 @@ module Spree
         :amount => order.total,
         :payment_method => payment_method
       })
-      order.next if order.state == "payment"
+      order.next
       if order.complete?
         flash.notice = Spree.t(:order_processed_successfully)
         flash[:commerce_tracking] = "nothing special"
