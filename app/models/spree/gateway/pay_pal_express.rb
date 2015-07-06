@@ -30,6 +30,10 @@ module Spree
       true
     end
 
+    def cancel(response)
+      #noop
+    end
+
     def method_type
       'paypal'
     end
