@@ -42,6 +42,7 @@ module Spree
     #this is essentially the refund method below except the creation of the refund transaction
     #as that will count doubly towards the "credited" amount
     def void(response_code, gateway_options={})
+      binding.pry
       payment = Spree::Payment.find_by_response_code(response_code)
       amount = payment.credit_allowed
 
@@ -84,7 +85,8 @@ module Spree
 
     #cancellations also work for a partially refunded payment
     def cancel(response_code)
-      void(response_code, {})
+      #void(response_code, {})
+      empty_success
     end    
 
     def method_type
