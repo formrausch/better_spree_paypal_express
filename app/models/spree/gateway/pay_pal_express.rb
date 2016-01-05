@@ -29,6 +29,13 @@ module Spree
     def auto_capture?
       true
     end
+
+    def empty_success
+      Class.new do
+        def success?; true; end
+        def authorization; nil; end
+      end.new
+    end
   
     # https://github.com/spree-contrib/better_spree_paypal_express/pull/180/files
     #
@@ -108,7 +115,7 @@ module Spree
         express_checkout.update_column(:transaction_id, transaction_id)
 
         #"order_id: The Order’s number attribute, plus the identifier for each payment, generated when the payment is first created"
-        payment = Spree::Payment.find_by_number(gateway_options[:order_id].split('-').last)
+        payment = Spree::Payment.find_by_identifier(gateway_options[:order_id].split('-').last)
         payment.update_attribute(:response_code, transaction_id)
         
         empty_success
