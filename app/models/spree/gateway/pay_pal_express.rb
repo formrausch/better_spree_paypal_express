@@ -17,6 +17,13 @@ module Spree
       ::PayPal::SDK::Merchant::API
     end
 
+    def empty_success
+      Class.new do
+        def success?; true; end
+        def authorization; nil; end
+      end.new
+    end        
+
     def provider
       ::PayPal::SDK.configure(
         :mode      => preferred_server.present? ? preferred_server : "sandbox",
@@ -32,6 +39,7 @@ module Spree
 
     def cancel(response)
       #noop
+      empty_success
     end
 
     def method_type
